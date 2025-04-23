@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video Full Screen có mật khẩu</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #000;
+    }
+    video {
+      max-width: 90vw;
+      max-height: 90vh;
+      border: 4px solid white;
+    }
+    #overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.95);
+      z-index: 9999;
+      color: white;
+      font-size: 1.2rem;
+      text-align: center;
+      padding-top: 20vh;
+    }
+    input {
+      font-size: 1rem;
+      padding: 8px;
+      margin-top: 20px;
+    }
+    button {
+      padding: 8px 12px;
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body>
+  <video id="scaryVideo" src="video.mp4" autoplay loop onclick="enterFullScreen()"></video>
+
+  <div id="overlay">
+    <p>Nhập mật khẩu để thoát:</p>
+    <input type="password" id="passwordInput" placeholder="Mật khẩu">
+    <button onclick="checkPassword()">OK</button>
+    <p id="message" style="color: red;"></p>
+  </div>
+
+  <audio id="scarySound" src="https://www.myinstants.com/media/sounds/movie_1.mp3"></audio>
+
+  <script>
+    const correctPassword = "123456";
+
+    window.onload = () => {
+      // Phát video và âm thanh
+      const video = document.getElementById("scaryVideo");
+      video.muted = false;
+      video.play();
+
+      document.getElementById("scarySound").play();
+
+      // Hiển thị overlay
+      document.getElementById("overlay").style.display = "block";
+    }
+
+    function enterFullScreen() {
+      // Mở chế độ toàn màn hình khi người dùng click vào video
+      const elem = document.documentElement;
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      } else if (elem.webkitRequestFullscreen) {
+        elem.webkitRequestFullscreen();
+      } else if (elem.msRequestFullscreen) {
+        elem.msRequestFullscreen();
+      }
+    }
+
+    function checkPassword() {
+      const input = document.getElementById("passwordInput").value;
+      const message = document.getElementById("message");
+      if (input === correctPassword) {
+        message.textContent = "";
+        document.exitFullscreen();
+        document.getElementById("overlay").style.display = "none";
+        document.getElementById("passwordInput").value = "";
+      } else {
+        message.textContent = "Sai mật khẩu. Vui lòng thử lại.";
+      }
+    }
+  </script>
+</body>
+</html>
